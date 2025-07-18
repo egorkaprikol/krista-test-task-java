@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:16
+    container_name: xmlparser-postgres
+    environment: # Переменные окружения, берутся из .env
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - "${DB_PORT}:5432" # Проброс порта: <внешний порт>:<в контейнере>
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./docker/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d:ro # Скрипт для инициализации БД
+    restart: unless-stopped
+
+volumes:
+  pgdata:
